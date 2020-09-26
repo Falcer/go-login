@@ -100,7 +100,7 @@ func NewUserRouter() *fiber.App {
 	app := &userAppImpl{userService}
 
 	route := fiber.New()
-	route.Post("/user", app.getUser)
+	route.Get("/user", app.getUser)
 	route.Post("/user/login", app.login)
 	route.Post("/user/register", app.register)
 
