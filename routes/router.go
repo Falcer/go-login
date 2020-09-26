@@ -13,6 +13,7 @@ import (
 type (
 	// UserApp interface
 	UserApp interface {
+		getUser(c *fiber.Ctx) error
 		login(c *fiber.Ctx) error
 		register(c *fiber.Ctx) error
 	}
@@ -23,6 +24,21 @@ type (
 		MongoURL string `envconfig:"MONGO_URL"`
 	}
 )
+
+func (a *userAppImpl) getUser(c *fiber.Ctx) error {
+	users, err := a.service.Users()
+	if err != nil {
+		return c.Status(500).JSON(&fiber.Map{
+			"success": true,
+			"message": "Failed to Get Users",
+		})
+	}
+	return c.Status(200).JSON(&fiber.Map{
+		"success": true,
+		"message": "Failed to Get Users",
+		"data":    users,
+	})
+}
 
 func (a *userAppImpl) login(c *fiber.Ctx) error {
 	userReq := new(model.User)
@@ -84,6 +100,7 @@ func NewUserRouter() *fiber.App {
 	app := &userAppImpl{userService}
 
 	route := fiber.New()
+	route.Post("/user", app.getUser)
 	route.Post("/user/login", app.login)
 	route.Post("/user/register", app.register)
 

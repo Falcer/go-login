@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/Falcer/go-login/model"
@@ -36,6 +37,29 @@ func NewMongoRepository(url string) (repository.UserRepository, error) {
 	return &mongoRepository{client}, nil
 }
 
+func (r *mongoRepository) GetAllUser() ([]model.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	cur, err := r.db.Database(databaseName).Collection("users").Find(ctx, bson.D{})
+	if err != nil {
+		return nil, err
+	}
+	defer cur.Close(ctx)
+	var users []model.User
+	for cur.Next(ctx) {
+		var result model.User
+		err := cur.Decode(&result)
+		if err != nil {
+			log.Fatal(err)
+		}
+		users = append(users, result)
+	}
+	if err := cur.Err(); err != nil {
+		log.Fatal(err)
+	}
+
+	return users, nil
+}
 func (r *mongoRepository) AddUser(user model.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

@@ -15,6 +15,7 @@ import (
 type (
 	// UserService interface
 	UserService interface {
+		Users() ([]model.User, error)
 		Login(user model.User) (*string, error)
 		Register(user model.User) error
 		Hash(password string) (string, error)
@@ -39,6 +40,11 @@ type (
 // NewUserService function
 func NewUserService(repo repository.UserRepository) UserService {
 	return &UserServiceImpl{repo}
+}
+
+// Users methods
+func (s *UserServiceImpl) Users() ([]model.User, error) {
+	return s.repo.GetAllUser()
 }
 
 // Login Methods
