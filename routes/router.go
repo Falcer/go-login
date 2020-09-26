@@ -29,7 +29,7 @@ func (a *userAppImpl) getUser(c *fiber.Ctx) error {
 	users, err := a.service.Users()
 	if err != nil {
 		return c.Status(500).JSON(&fiber.Map{
-			"success": true,
+			"success": false,
 			"message": "Failed to Get Users",
 		})
 	}
@@ -44,7 +44,7 @@ func (a *userAppImpl) login(c *fiber.Ctx) error {
 	userReq := new(model.User)
 	if err := c.BodyParser(userReq); err != nil {
 		return c.Status(500).JSON(&fiber.Map{
-			"success": true,
+			"success": false,
 			"message": "Failed to Decode Request",
 		})
 	}
@@ -52,7 +52,7 @@ func (a *userAppImpl) login(c *fiber.Ctx) error {
 	token, err := a.service.Login(*userReq)
 	if err != nil {
 		return c.Status(500).JSON(&fiber.Map{
-			"success": true,
+			"success": false,
 			"message": "Failed to Login",
 		})
 	}
