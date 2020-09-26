@@ -24,4 +24,4 @@ services:
       MONGO_INITDB_DATABASE: users
       MONGO_INITDB_ROOT_USERNAME: argadev
       MONGO_INITDB_ROOT_PASSWORD: 123456
-    restart: unless-stopped
+    restart: always
