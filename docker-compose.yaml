@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  user:
+    build:
+      context: .
+      dockerfile: ./app.dockerfile
+    ports:
+      - 8000:8080
+    depends_on:
+      - user_db
+    environment:
+      MONGO_URL: mongodb://argadev:123456@user_db/?ssl=false
+      JWT_KEY: "mysecretkey123"
+    restart: on-failure
+
+  user_db:
+    build:
+      context: .
+      dockerfile: ./db.dockerfile
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_DATABASE: users
+      MONGO_INITDB_ROOT_USERNAME: argadev
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    restart: unless-stopped
