@@ -94,7 +94,7 @@ func (s *UserServiceImpl) GenerateJWT(username string) (*string, error) {
 		log.Fatal(err)
 	}
 
-	expTime := time.Now().Add(5 * time.Minute)
+	expTime := time.Now().Add(30 * 24 * time.Hour)
 	tokenString, err := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{Username: username, StandardClaims: jwt.StandardClaims{ExpiresAt: expTime.Unix()}}).SignedString([]byte(env.JWTKEY))
 
 	if err != nil {
